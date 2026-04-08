@@ -1,0 +1,27 @@
+name: Build Mod Menu
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26b
+      - name: Build with ndk-build
+        run: |
+          cd app/src/main/jni
+          ndk-build
+      - name: Upload result
+        uses: actions/upload-artifact@v3
+        with:
+          name: libil2cpp-modded
+          path: app/src/main/libs/arm64-v8a/*.so
+          
